@@ -24,17 +24,17 @@
                                         foto_capa,
                                         link
                                     ) values (
-                                        ${jogo.nome},
-                                        ${jogo.data_lancamento},
-                                        ${jogo.versao},
-                                        ${jogo.tamanho},
-                                        ${jogo.descricao},
-                                        ${jogo.foto_capa},
-                                        ${jogo.link}
+                                        '${jogo.nome}',
+                                        '${jogo.data_lancamento}',
+                                        '${jogo.versao}',
+                                        '${jogo.tamanho}',
+                                        '${jogo.descricao}',
+                                        '${jogo.foto_capa}',
+                                        '${jogo.link}'
                                     )`
 
     //Executa o script SQL no BD e AGUARDA o retorno do BD
-    let result = await prisma.$executeRawUnSafe(sql)
+    let result = await prisma.$executeRawUnsafe(sql)
 
     if (result)
         return true

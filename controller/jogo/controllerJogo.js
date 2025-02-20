@@ -4,9 +4,15 @@
  * Autor: Marcel
  * Versão: 1.0
  * ******************************************************/
+//Import do arquivo  de configuração para mensagens e status code
+const MESSAGE = require('../../modulo/config.js')
+
+//Import do DAO para realizar o CRUD no BD
+const jogoDAO = require('../../model/DAO/jogo.js')
 
  //Função para inserir um novo jogo
  const inserirJogo = async function(jogo){
+    console.log(jogo)
     if(
         jogo.nome                    == undefined || jogo.nome == ''                  || jogo.nome            == null   || jogo.nome.length                       > 80 ||
         jogo.data_lancamento         == undefined || jogo.data_lancamento == ''       || jogo.data_lancamento == null   || jogo.data_lancamento.length            > 10 ||

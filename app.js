@@ -48,12 +48,12 @@ app.post('/v1/controle-jogos/jogo', cors(), bodyParserJSON, async function(reque
     let dadosBody = request.body
 
     //Encaminhando os dados do body da requisição para a controller inserir no BD
-    let resultJogo = controllerJogo.inserirJogo(dadosBody)
+    let resultJogo = await controllerJogo.inserirJogo(dadosBody)
 
     response.status(resultJogo.status_code)
     response.json(resultJogo)
 })
 
 app.listen(8080, function(){
-    console.log('API aguardando')
+    console.log('API aguardando requisições ...')
 })
