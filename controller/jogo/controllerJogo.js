@@ -19,7 +19,17 @@
 
 
 
-    )
+    ){
+        return MESSAGE.ERROR_REQUIRED_FIELDS //400
+    }else{
+        //Encaminha os dados do novo jogo para ser inserido no BD
+        let resultJogo = await jogoDAO.insertJogo(jogo)
+
+        if(resultJogo)
+            return MESSAGE.SUCCESS_CREATED_ITEM //201
+        else
+        return MESSAGE.ERROR_INTERNAL_SERVER //500
+    }
  }
 
  //Função para atualizar um jogo
@@ -40,4 +50,13 @@ const listarJogo = async function(){
 //Função para buscar um jogo
 const buscarJogo = async function(){
      
+}
+
+
+module.exports = {
+    inserirJogo,
+    atualizarJogo,
+    excluirJogo,
+    listarJogo,
+    buscarJogo
 }
