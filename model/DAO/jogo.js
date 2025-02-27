@@ -35,7 +35,7 @@
                                         '${jogo.link}'
                                     )`
 
-    //Executa o script SQL no BD e AGUARDA o retorno do BD (insert, update, delete - execute)
+    //Executa o script SQL no BD e AGUARDA o retorno do BD (insert, update, delete -execute)
     let result = await prisma.$executeRawUnsafe(sql)
 
     if (result)
@@ -81,7 +81,19 @@ try {
 
 //Função para buscar no Banco de Dados um jogo pelo ID
 const selectByIdJogo = async function(){
+try {
+    let sql = 'select * from tbl_jogo order by id desc'
 
+    let result = await prisma.$paramsRawUnsafe(sql)
+
+    if(result)
+        return result
+    else
+    return false
+
+} catch (error) {
+    return false
+}
 }
 
 module.exports = {

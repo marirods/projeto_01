@@ -94,7 +94,31 @@ const listarJogo = async function(){
 
 //Função para buscar um jogo
 const buscarJogo = async function(){
-     
+     try {
+        let dadosJogos = {}
+
+        let resultJogo = await jogoDAO.selectByIdJogo()
+
+        if(resultJogo != false || typeof(resultJogo) == 'object'){
+            if (resultJogo.length > 0){
+            }
+            
+            if(resultJogo.length > 0){
+                dadosJogos.status = true
+                dadosJogos.status_code = 200
+                dadosJogos.items = resultJogo.length
+                dadosJogos.games = resultJogo
+
+                return dadosJogos //200
+        }else{
+            return MESSAGE.ERROR_NOT_FOUND
+        }
+    }else{
+        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+    }
+     } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+     }
 }
 
 

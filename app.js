@@ -65,7 +65,13 @@ app.get('/v1/controle-jogos/jogo',  cors(), async function(request, response){
     response.status(resultJogo.status_code)
     response.json(resultJogo)
 })
-    
+
+app.get('/v1/controle-jogos/jogo/1', cors(), async function(request, response){
+    let resultJogo = await controllerJogo.buscarJogo()
+
+    response.status(resultJogo.status_code)
+    response.json(resultJogo)
+})
 
 app.listen(8080, function(){
     console.log('API aguardando requisições ...')
