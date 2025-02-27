@@ -63,7 +63,7 @@ const listarJogo = async function(){
      let resultJogo = await jogoDAO.selectAllJogo()
 
 
-     if(resultJogo != false){
+     if(resultJogo != false || typeof(resultJogo) == 'object'){
 
      
 
