@@ -9,11 +9,13 @@
  const { PrismaClient } = require('@prisma/client')
 
 
- 
+ //Instancia da classe do prisma client, para gerar um objeto
+ const prisma = new PrismaClient()
+
+
  //Função para inserir no Banco de Dados um novo jogo
  const insertJogo = async function(jogo){
-     //Instancia da classe do prisma client, para gerar um objeto
-     const prisma = new PrismaClient()
+    try {
 
      let sql = `insert into tbl_jogo(
                                         nome,
@@ -33,16 +35,21 @@
                                         '${jogo.link}'
                                     )`
 
-    //Executa o script SQL no BD e AGUARDA o retorno do BD
+    //Executa o script SQL no BD e AGUARDA o retorno do BD (insert, update, delete - execute)
     let result = await prisma.$executeRawUnsafe(sql)
 
     if (result)
         return true
     else
         return false
+ }  catch (error) {
+    console.log(error)
+    return false
+}
+
  }
 
-//Função para atualizar no Banco de Dados um jogo existente
+//Função para atualizar no Banco de Dados um jogo existente 
  const updateJogo = async function(){
 
 }
@@ -54,6 +61,21 @@ const deleteJogo = async function(){
 
 //Função para retornar do Banco de Dados uma lista de jogos
 const selectAllJogo = async function(){
+try {
+    //Script SQL para retornar os dados do BD
+    let sql = 'select * from tbl_jogo order by id desc'
+
+    //Executa o script SQL e aguarda o retorno dos dados (select - query)
+    let result = await prisma.$queryRawUnsafe(sql)
+
+    if(result)
+        return result
+    else
+    return false
+
+} catch (error) {
+    return false
+}
 
 }
 
