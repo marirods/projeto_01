@@ -57,6 +57,9 @@ app.post('/v1/controle-jogos/jogo', cors(), bodyParserJSON, async function(reque
     response.json(resultJogo)
 })
 
+
+
+
 //Endpoint para retornar uma lista de jogos
 app.get('/v1/controle-jogos/jogo',  cors(), async function(request, response){
     //Chama a função para listar os jogos
@@ -66,8 +69,19 @@ app.get('/v1/controle-jogos/jogo',  cors(), async function(request, response){
     response.json(resultJogo)
 })
 
-app.get('/v1/controle-jogos/jogo/1', cors(), async function(request, response){
-    let resultJogo = await controllerJogo.buscarJogo()
+
+
+app.get('/v1/controle-jogos/jogo/:id', cors(), async function(request, response){
+    let id = request.params.id
+    let resultJogo = await controllerJogo.buscarJogo(id)
+
+    response.status(resultJogo.status_code)
+    response.json(resultJogo)
+})
+
+app.delete('/v1/controle-jogos/jogo/delete/:id', cors(), async function(request, response){
+    let id = request.params.id
+    let resultJogo = await controllerJogo.excluirJogo(id)
 
     response.status(resultJogo.status_code)
     response.json(resultJogo)

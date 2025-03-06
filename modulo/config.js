@@ -13,8 +13,10 @@ const ERROR_INTERNAL_SERVER_CONTROLLER = {status: false, status_code: 500, messa
 const ERROR_INTERNAL_SERVER_MODEL      = {status: false, status_code: 500, message: "Não foi possível processar a requisição, pois ocorreram erros internos no servidor DA MODEL!!!"}
 const ERROR_CONTENT_TYPE               = {status: false, status_code: 415, message: "Não foi possível processar a requisição, pois, o formato de dados encaminhado não é suportado pelo servidor. Favor encaminhar apenas JSON"}
 const ERROR_NOT_FOUND                  = {status: false, status_code: 404, message: "Não foram encontrados itens para retornar."}
+const ERROR_NOT_DELETE                 = {status: false, status_code: 400, message: "Não foi possível deletar por relação de outras tabelas."}
 /* ************************************** MENSAGENS DE SUCESSO **************************************************** */
 const SUCCESS_CREATED_ITEM             = {status: true, status_code: 201, message: "Item criado com sucesso"}
+const SUCCESS_DELETE_ID                = {status: true, status_code: 200, message: "ID deletado com sucesso"}
 
 module.exports ={
     ERROR_REQUIRED_FIELDS,
@@ -22,5 +24,7 @@ module.exports ={
     ERROR_INTERNAL_SERVER_MODEL,
     ERROR_CONTENT_TYPE,
     ERROR_NOT_FOUND,
-    SUCCESS_CREATED_ITEM
+    ERROR_NOT_DELETE,
+    SUCCESS_CREATED_ITEM,
+    SUCCESS_DELETE_ID
 }

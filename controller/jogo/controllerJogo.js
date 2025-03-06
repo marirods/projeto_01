@@ -50,8 +50,39 @@ const jogoDAO = require('../../model/DAO/jogo.js')
 }
 
 //Função para excluir um jogo
-const excluirJogo = async function(){
-     
+const excluirJogo = async function(id){
+    try {
+
+        if (id == undefined || id == '' || isNaN(id)) {
+            return MESSAGE.ERROR_REQUIRED_FIELDS;
+        }
+        if(id){
+            let verificar = await jogoDAO.selectByIdJogo(id);
+            let resultJogo = await jogoDAO.deleteJogo(id);
+
+            if (verificar != false || typeof(verificar) == 'object') {
+                if(verificar.length > 0){
+                    if(resultJogo){
+                        return MESSAGE.SUCCESS_DELETE_ID
+                    }else{
+                        return MESSAGE.ERROR_NOT_DELETE
+                    }
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND
+                }
+                
+            } else {
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+            }
+        }else{
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        
+    } catch (error) {
+
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
 }
 
 //Função para retornar todos os jogos
@@ -61,11 +92,7 @@ const listarJogo = async function(){
 
      //Chama a função para retornar os dados do jogo
      let resultJogo = await jogoDAO.selectAllJogo()
-
-
      if(resultJogo != false || typeof(resultJogo) == 'object'){
-
-     
 
      if(resultJogo.length > 0){
 
@@ -93,34 +120,31 @@ const listarJogo = async function(){
 }
 
 //Função para buscar um jogo
-const buscarJogo = async function(){
-     try {
-        let dadosJogos = {}
+const buscarJogo = async function(id) {
+    try {
+        let dadosJogos = {};
 
-        let resultJogo = await jogoDAO.selectByIdJogo()
+        if (id == undefined || id == '' || isNaN(id)) {
+            return MESSAGE.ERROR_REQUIRED_FIELDS;
+        }
 
-        if(resultJogo != false || typeof(resultJogo) == 'object'){
-            if (resultJogo.length > 0){
-            }
-            
-            if(resultJogo.length > 0){
-                dadosJogos.status = true
-                dadosJogos.status_code = 200
-                dadosJogos.items = resultJogo.length
-                dadosJogos.games = resultJogo
+        let resultJogo = await jogoDAO.selectByIdJogo(id);
 
-                return dadosJogos //200
-        }else{
+        if (resultJogo && resultJogo.length > 0) {
+            dadosJogos.status = true;
+            dadosJogos.status_code = 200;
+            dadosJogos.items = resultJogo.length;
+            dadosJogos.games = resultJogo;
+
+            return dadosJogos
+        } else {
             return MESSAGE.ERROR_NOT_FOUND
         }
-    }else{
-        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
-    }
-     } catch (error) {
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
-     }
-}
+    } catch (error) {
 
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
 
 module.exports = {
     inserirJogo,
