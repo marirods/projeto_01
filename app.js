@@ -104,6 +104,76 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
     response.json(resultJogo)
 })
 
+// *****************************************************************************************************************/
+// empresas
+
+const controllerEmpresas = require('./controller/empresas/controllerEmpresas.js')
+
+
+//Endpoint para inserir uma empresa no BD
+app.post('/v1/controle-empresas/empresas', cors(), bodyParserJSON, async function(request, response){
+
+    //Recebe o content type para validar o tipo de dados da requisição
+   let contentType = request.headers['content-type']
+
+    //Recebe o conteúdo do body da requisição
+    let dadosBody = request.body
+
+    //Encaminhando os dados do body da requisição para a controller inserir no BD
+    let resultEmpresas = await controllerEmpresas.inserirEmpresas(dadosBody, contentType)
+
+    response.status(resultEmpresas.status_code)
+    response.json(resultEmpresas)
+})
+
+
+
+
+//Endpoint para retornar uma lista de jogos
+app.get('/v1/controle-empresas/empresas',  cors(), async function(request, response){
+    //Chama a função para listar os jogos
+    let resultEmpresas = await controllerEmpresas.listarEmpresas()
+
+    response.status(resultEmpresas.status_code)
+    response.json(resultEmpresas)
+})
+
+
+//buscar pelo id
+app.get('/v1/controle-empresas/empresas/:id', cors(), async function(request, response){
+    let idEmpresas = request.params.id
+    let resultEmpresas = await controllerEmpresas.buscarEmpresas(idEmpresas)
+
+    response.status(resultEmpresas.status_code)
+    response.json(resultEmpresas)
+})
+
+
+//deletar
+app.delete('/v1/controle-empresas/empresas/:id', cors(), async function(request, response){
+    let idEmpresas = request.params.id
+    let resultEmpresas = await controllerEmpresas.excluirEmpresas(idEmpresas)
+
+    response.status(resultEmpresas.status_code)
+    response.json(resultEmpresas)
+})
+
+app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(request, response){
+
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Recebe o ID do jogo
+    let idJogo = request.params.id
+
+    //Recebe os dados do jogo encaminhando no body da requisição
+    let dadosBody = request.body
+
+    let resultJogo = await controllerJogo.atualizarJogo(dadosBody, idJogo, contentType)
+
+    response.status(resultJogo.status_code)
+    response.json(resultJogo)
+})
 app.listen(8080, function(){
     console.log('API aguardando requisições ...')
 })
