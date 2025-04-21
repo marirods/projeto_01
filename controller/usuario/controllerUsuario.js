@@ -16,7 +16,7 @@ const UsuarioDAO = require('../../model/DAO/usuario.js')
         if(contentType == 'application/json'){
         if(
             usuarios.nome                    == undefined || usuarios.nome == ''                  || usuarios.nome            == null   || usuarios.nome.length                       > 80 ||
-            usuarios.email                   == undefined || usuarios.email == ''                 || usuarios.email        == null      || usuarios.email.length                      > 10 ||
+            usuarios.email                   == undefined || usuarios.email == ''                 || usuarios.email           == null   || usuarios.email.length                      > 10 ||
             usuarios.username                == undefined || usuarios.username == ''              || usuarios.username        == null   || usuarios.username.length                   > 10 ||
             id                               == undefined || id == ''                             || id                       == null   || isNaN (id)                                      || id <=0
            
@@ -24,7 +24,7 @@ const UsuarioDAO = require('../../model/DAO/usuario.js')
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
     }else{
         //Encaminha os dados do novo jogo para ser inserido no BD
-        let resultUsuario = await UsuarioDAO.inserirUsuario(usuarios)
+        let resultUsuario = await UsuarioDAO.insertUsuario(usuarios)
 
         if(resultUsuario)
             return MESSAGE.SUCCESS_CREATED_ITEM //201
@@ -42,7 +42,7 @@ const UsuarioDAO = require('../../model/DAO/usuario.js')
 }
 
  //Função para atualizar uma empresa
- const atualizarUsuario = async function(usuarios, id, contentType){
+ const atualizarUsuario = async function(usuarios, idUsuario, contentType){
      try {
         if(contentType == 'application/json'){
             if(
