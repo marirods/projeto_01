@@ -65,7 +65,7 @@
 //Função para excluir no Banco de Dados uma categoria existente
 const deleteCategoria = async function(idCategoria){
     try {
-        let sql = `DELETE FROM tbl_categoria WHERE id = ${idCategoria}`
+        let sql = `DELETE FROM tbl_categoria WHERE id_categoria = ${idCategoria}`
         let result = await prisma.$executeRawUnsafe(sql)
 
         return result ? true : false
@@ -78,7 +78,7 @@ const deleteCategoria = async function(idCategoria){
 const selectAllCategoria = async function(){
 try {
     //Script SQL para retornar os dados do BD
-    let sql = 'select * from tbl_classificacao_etaria order by id desc'
+    let sql = 'select * from tbl_categoria order by id_categoria desc'
 
     //Executa o script SQL e aguarda o retorno dos dados (select - query)
     let result = await prisma.$queryRawUnsafe(sql)
@@ -97,7 +97,7 @@ try {
 //Função para buscar no Banco de Dados uma categoria pelo ID
 const selectByIdCategoria = async function(idCategoria){
 try {
-    let sql = `SELECT * FROM tbl_categoria WHERE id = ${idCategoria}`
+    let sql = `SELECT * FROM tbl_categoria WHERE id_categoria = ${idCategoria}`
     let result = await prisma.$queryRawUnsafe(sql)
 
     if(result.length > 0)

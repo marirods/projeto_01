@@ -65,7 +65,7 @@
 //Função para excluir no Banco de Dados uma classificacao etária existente
 const deleteClassificacao_Etaria = async function(idClassificacao){
     try {
-        let sql = `DELETE FROM tbl_classificacao_etaria WHERE id = ${idClassificacao}`
+        let sql = `DELETE FROM tbl_classificacao_etaria WHERE id_faixa_etaria = ${idClassificacao}`
         let result = await prisma.$executeRawUnsafe(sql)
 
         return result ? true : false
@@ -78,7 +78,7 @@ const deleteClassificacao_Etaria = async function(idClassificacao){
 const selectAllClassificacoes = async function(){
 try {
     //Script SQL para retornar os dados do BD
-    let sql = 'select * from tbl_classificacao_etaria order by id desc'
+    let sql = 'select * from tbl_classificacao_etaria order by id_faixa_etaria desc'
 
     //Executa o script SQL e aguarda o retorno dos dados (select - query)
     let result = await prisma.$queryRawUnsafe(sql)
@@ -97,7 +97,7 @@ try {
 //Função para buscar no Banco de Dados uma classificação pelo ID
 const selectByIdClassificacoes = async function(idClassificacao){
 try {
-    let sql = `SELECT * FROM tbl_classificacao_etaria WHERE id = ${idClassificacao}`
+    let sql = `SELECT * FROM tbl_classificacao_etaria WHERE id_faixa_etaria = ${idClassificacao}`
     let result = await prisma.$queryRawUnsafe(sql)
 
     if(result.length > 0)

@@ -63,7 +63,7 @@
 //Função para excluir no Banco de Dados um idioma existente
 const deleteIdiomas = async function(idIdiomas){
     try {
-        let sql = `DELETE FROM tbl_categoria WHERE id = ${idIdiomas}`
+        let sql = `DELETE FROM tbl_idiomas WHERE id_idioma = ${idIdiomas}`
         let result = await prisma.$executeRawUnsafe(sql)
 
         return result ? true : false
@@ -76,7 +76,7 @@ const deleteIdiomas = async function(idIdiomas){
 const selectAllIdiomas = async function(){
 try {
     //Script SQL para retornar os dados do BD
-    let sql = 'select * from tbl_idiomas order by id desc'
+    let sql = 'select * from tbl_idiomas order by id_idioma desc'
 
     //Executa o script SQL e aguarda o retorno dos dados (select - query)
     let result = await prisma.$queryRawUnsafe(sql)
@@ -95,7 +95,7 @@ try {
 //Função para buscar no Banco de Dados um idioma pelo ID
 const selectByIdIdiomas = async function(idIdiomas){
 try {
-    let sql = `SELECT * FROM tbl_idiomas WHERE id = ${idIdiomas}`
+    let sql = `SELECT * FROM tbl_idiomas WHERE id_idioma = ${idIdiomas}`
     let result = await prisma.$queryRawUnsafe(sql)
 
     if(result.length > 0)

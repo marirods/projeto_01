@@ -68,7 +68,7 @@
 //Função para excluir no Banco de Dados uma plataforma existente
 const deletePlataformas = async function(idPlataformas){
     try {
-        let sql = `DELETE FROM tbl_usuario WHERE id = ${idPlataformas}`
+        let sql = `DELETE FROM tbl_plataformas WHERE id_plataformas = ${idPlataformas}`
         let result = await prisma.$executeRawUnsafe(sql)
 
         return result ? true : false
@@ -81,7 +81,7 @@ const deletePlataformas = async function(idPlataformas){
 const selectAllPlataformas = async function(){
 try {
     //Script SQL para retornar os dados do BD
-    let sql = 'select * from tbl_plataformas order by id desc'
+    let sql = 'select * from tbl_plataformas order by id_plataformas desc'
 
     //Executa o script SQL e aguarda o retorno dos dados (select - query)
     let result = await prisma.$queryRawUnsafe(sql)
@@ -100,7 +100,7 @@ try {
 //Função para buscar no Banco de Dados uma plataforma pelo ID
 const selectByIdPlataformas = async function(idPlataformas){
 try {
-    let sql = `SELECT * FROM tbl_plataformas WHERE id = ${idPlataformas}`
+    let sql = `SELECT * FROM tbl_plataformas WHERE id_plataformas = ${idPlataformas}`
     let result = await prisma.$queryRawUnsafe(sql)
 
     if(result.length > 0)

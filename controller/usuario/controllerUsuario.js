@@ -128,7 +128,7 @@ const listarUsuario = async function(){
         let dadosUsuario = {}
 
      //Chama a função para retornar os dados do jogo
-     let resultUsuario = await UsuarioDAO.selectAllUsuarios()
+     let resultUsuario = await UsuarioDAO.selectAllUsuario()
      if(resultUsuario != false || typeof(resultUsuario) == 'object'){
 
      if(resultUsuario.length > 0){

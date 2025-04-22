@@ -68,7 +68,7 @@
 //Função para excluir no Banco de Dados um usuario existente
 const deleteUsuario = async function(idUsuario){
     try {
-        let sql = `DELETE FROM tbl_usuario WHERE id = ${idUsuario}`
+        let sql = `DELETE FROM tbl_usuario WHERE id_usuario = ${idUsuario}`
         let result = await prisma.$executeRawUnsafe(sql)
 
         return result ? true : false
@@ -78,10 +78,10 @@ const deleteUsuario = async function(idUsuario){
 }
 
 //Função para retornar do Banco de Dados uma lista de usuarios
-const selectAllUsuarios = async function(){
+const selectAllUsuario = async function(){
 try {
     //Script SQL para retornar os dados do BD
-    let sql = 'select * from tbl_usuario order by id desc'
+    let sql = 'select * from tbl_usuario order by id_usuario desc'
 
     //Executa o script SQL e aguarda o retorno dos dados (select - query)
     let result = await prisma.$queryRawUnsafe(sql)
@@ -100,7 +100,7 @@ try {
 //Função para buscar no Banco de Dados um usuario pelo ID
 const selectByIdUsuario = async function(idUsuario){
 try {
-    let sql = `SELECT * FROM tbl_usuario WHERE id = ${idUsuario}`
+    let sql = `SELECT * FROM tbl_usuario WHERE id_usuario = ${idUsuario}`
     let result = await prisma.$queryRawUnsafe(sql)
 
     if(result.length > 0)
@@ -119,6 +119,6 @@ module.exports = {
     insertUsuario,
     updateUsuario,
     deleteUsuario,
-    selectAllUsuarios,
+    selectAllUsuario,
     selectByIdUsuario
 }
