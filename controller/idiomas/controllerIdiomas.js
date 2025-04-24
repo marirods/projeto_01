@@ -5,6 +5,8 @@
  * Versão: 1.0
  * ******************************************************/
 //Import do arquivo  de configuração para mensagens e status code
+// const MESSAGE = require('../../modulo/config.js')
+
 const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar o CRUD no BD
@@ -15,8 +17,7 @@ const IdiomasDAO = require('../../model/DAO/idiomas.js')
     try {
         if(contentType == 'application/json'){
         if(
-            idioma.idioma                            == undefined || idioma.idioma                == ''         || idioma.idioma                   == null   || idioma.idioma.length                       > 80 ||
-            id                                       == undefined || id                           == ''         || id                              == null   || isNaN (id)                                                 || id <=0
+            idioma.idioma                            == undefined || idioma.idioma                == ''         || idioma.idioma                   == null   || idioma.idioma.length                       > 80
            
     ){
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
@@ -34,6 +35,7 @@ const IdiomasDAO = require('../../model/DAO/idiomas.js')
     return MESSAGE.ERROR_CONTENT_TYPE //415
 }
  } catch (error) {
+    console.log(error)
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
  }
 
@@ -44,14 +46,13 @@ const IdiomasDAO = require('../../model/DAO/idiomas.js')
      try {
         if(contentType == 'application/json'){
             if(
-                idioma.idioma                           == undefined || idioma.idioma == ''                         || idioma.idioma                == null   || idioma.idioma.length                                                 > 80 ||
-                id                                      == undefined || id == ''                                    || id                           == null   || isNaN (id)                                                      || id <=0 || id <=0
+                idioma.idioma                           == undefined || idioma.idioma == ''                         || idioma.idioma                == null   || idioma.idioma.length                                                 > 80                                                    
     
         ){
             return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
                 //Validar se o ID existe no BD
-                let resultIdiomas = await buscarIdiomas(parseInt(id))
+                let resultIdiomas = await buscarIdiomas(parseInt(idIdioma))
 
                 if(resultIdiomas.status_code == 200){
                     //Update
@@ -86,10 +87,10 @@ const IdiomasDAO = require('../../model/DAO/idiomas.js')
 const excluirIdiomas = async function(idIdioma){
     try {
 
-        if (id == undefined || id == '' || isNaN(idIdioma)) {
+        if (idIdioma == undefined || idIdioma == '' || isNaN(idIdioma)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
-        if(id){
+        if(idIdioma){
             let verificar = await IdiomasDAO.selectByIdIdiomas(idIdioma);
             let resultIdiomas = await IdiomasDAO.deleteIdiomas(idIdioma);
 
@@ -154,10 +155,12 @@ const listarIdiomas = async function(){
 
 //Função para buscar um jogo
 const buscarIdiomas = async function(idIdioma) {
+
+    
     try {
         let dadosIdiomas = {};
 
-        if (id == undefined || id == '' || isNaN(idIdioma)) {
+        if (idIdioma == undefined || idIdioma == '' || isNaN(idIdioma)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 
@@ -167,14 +170,14 @@ const buscarIdiomas = async function(idIdioma) {
             resultIdiomas.status = true;
             dadosIdiomas.status_code = 200;
             dadosIdiomas.items = resultIdiomas.length;
-            dadosIdiomas.games = resultIdiomas;
+            dadosIdiomas.idiomas = resultIdiomas;
 
             return dadosIdiomas
         } else {
             return MESSAGE.ERROR_NOT_FOUND
         }
     } catch (error) {
-
+        console.log(error)
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }

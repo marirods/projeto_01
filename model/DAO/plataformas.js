@@ -47,9 +47,9 @@
     try {
         let sql = `update tbl_plataformas set 
                                          nome                      = '${plataformas.nome}',
-                                         dispositivo               = '${plataformas.fabricante}',
+                                         fabricante               = '${plataformas.fabricante}',
                                          dispositivo               = '${plataformas.dispositivo}'             
-                                    where id = ${plataformas.id}`
+                                    where id_plataformas = ${plataformas.id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
         

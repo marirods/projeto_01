@@ -49,7 +49,7 @@
                                          nome                = '${empresas.nome}',
                                          segmento            = '${empresas.segmento}',
                                          pais_origem         = '${empresas.pais_origem}'             
-                                    where id = ${empresas.id}`
+                                    where id_empresas = ${empresas.id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
         

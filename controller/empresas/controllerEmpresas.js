@@ -17,8 +17,8 @@ const EmpresasDAO = require('../../model/DAO/empresas.js')
         if(contentType == 'application/json'){
         if(
             empresas.nome                    == undefined || empresas.nome == ''                  || empresas.nome            == null   || empresas.nome.length                       > 100 ||
-            empresas.segmento                == undefined || empresas.segmento == ''              || empresas.segmento        == null   || empresas.segmento.length                   > 40 ||
-            empresas.pais_origem             == undefined || empresas.pais_origem == ''           || empresas.pais_origem     == null   || empresas.pais_origem.length                > 50 
+            empresas.segmento                == undefined || empresas.segmento == ''              || empresas.segmento        == null   || empresas.segmento.length                   > 100 ||
+            empresas.pais_origem             == undefined || empresas.pais_origem == ''           || empresas.pais_origem     == null   || empresas.pais_origem.length                > 100 
     ){
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
     }else{
@@ -41,14 +41,15 @@ const EmpresasDAO = require('../../model/DAO/empresas.js')
 }
 
  //Função para atualizar uma empresa
- const atualizarEmpresas = async function(empresas, id, contentType){
+ const atualizarEmpresas = async function(empresas, idEmpresas, contentType){
      try {
+        
         if(contentType == 'application/json'){
             if(
-                empresas.nome                    == undefined || empresas.nome == ''                  || empresas.nome         == null              || empresas.nome.length                       > 100 ||
-                empresas.segmento                == undefined || empresas.segmento == ''              || empresas.segmento     == null              || empresas.segmento.length                   > 40 ||
-                empresas.pais_origem             == undefined || empresas.pais_origem == ''           || empresas.pais_origem  == null              || empresas.pais_origem.length                > 50 ||
-                id                               == undefined || id == ''                             || id                    == null              || isNaN (id)                                      || id <=0
+                empresas.nome == undefined || empresas.nome == '' || empresas.nome == null || empresas.nome.length > 100 ||
+                empresas.segmento == undefined || empresas.segmento == '' || empresas.segmento == null || empresas.segmento.length > 20 ||
+                empresas.pais_origem == undefined || empresas.pais_origem == '' || empresas.pais_origem  == null || empresas.pais_origem.length > 45 ||
+                idEmpresas == undefined || idEmpresas == '' || idEmpresas == null || isNaN (idEmpresas) || idEmpresas <=0
     
         ){
             return MESSAGE.ERROR_REQUIRED_FIELDS //400

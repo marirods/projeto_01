@@ -161,7 +161,7 @@ app.delete('/v1/controle-empresas/empresas/delete/:id', cors(), async function(r
     response.json(resultEmpresas)
 })
 
-app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(request, response){
+app.put('/v1/controle-empresas/empresas/:id', cors(), bodyParserJSON, async function(request, response){
 
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
@@ -171,6 +171,8 @@ app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(re
 
     //Recebe os dados do jogo encaminhando no body da requisição
     let dadosBody = request.body
+    console.log(dadosBody);
+    
 
     let resultEmpresas = await controllerEmpresas.atualizarEmpresas(dadosBody, idEmpresas, contentType)
 
@@ -536,6 +538,6 @@ app.put('/v1/controle-idioma/idioma/:id', cors(), bodyParserJSON, async function
 
 
 
-app.listen(8080, function(){
+app.listen(3030, function(){
     console.log('API aguardando requisições ...')
 })

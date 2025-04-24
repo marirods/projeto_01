@@ -49,7 +49,7 @@
                                          nome                = '${usuario.nome}',
                                          email               = '${usuario.email}',
                                          username            = '${usuario.username}'             
-                                    where id = ${usuario.id}`
+                                    where id_usuario = ${usuario.id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
         

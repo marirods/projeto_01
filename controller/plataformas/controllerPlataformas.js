@@ -15,10 +15,9 @@ const PlataformasDAO = require('../../model/DAO/plataformas.js')
     try {
         if(contentType == 'application/json'){
         if(
-            plataformas.nome                         == undefined || plataformas.nome == ''                  || plataformas.nome              == null   || plataformas.nome.length                       > 80 ||
-            plataformas.fabricante                   == undefined || plataformas.fabricante == ''            || plataformas.fabricante        == null   || plataformas.fabricante.length                 > 10 ||
-            plataformas.dispositivo                  == undefined || plataformas.username == ''              || plataformas.dispositivo       == null   || plataformas.username.length                   > 10 ||
-            id                                       == undefined || id == ''                                || id                            == null   || isNaN (id)                                         || id <=0
+            plataformas.nome                         == undefined || plataformas.nome == ''                  || plataformas.nome              == null   || plataformas.nome.length                       > 45 ||
+            plataformas.fabricante                   == undefined || plataformas.fabricante == ''            || plataformas.fabricante        == null   || plataformas.fabricante.length                 > 45 ||
+            plataformas.dispositivo                  == undefined || plataformas.dispositivo == ''              || plataformas.dispositivo       == null   || plataformas.dispositivo.length                   > 50 
            
     ){
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
@@ -43,24 +42,25 @@ const PlataformasDAO = require('../../model/DAO/plataformas.js')
 
  //Função para atualizar uma empresa
  const atualizarPlataformas = async function(plataformas, idPlataformas, contentType){
-     try {
+     try {        
         if(contentType == 'application/json'){
             if(
-                plataformas.nome                         == undefined || plataformas.nome == ''                       || plataformas.nome              == null   || plataformas.nome.length                            > 80 ||
-                plataformas.fabricante                   == undefined || plataformas.fabricante == ''                 || plataformas.fabricante        == null   || plataformas.fabricante.length                      > 10 ||
-                plataformas.dispositivo                  == undefined || plataformas.dispositivo == ''                || plataformas.dispositivo       == null   || plataformas.dispositivo.length                     > 10 ||
-                id                                       == undefined || id == ''                                     || id                            == null   || isNaN (id)                                              || id <=0 || id <=0
+                plataformas.nome                         == undefined || plataformas.nome == ''                       || plataformas.nome              == null   || plataformas.nome.length                            > 45||
+                plataformas.fabricante                   == undefined || plataformas.fabricante == ''                 || plataformas.fabricante        == null   || plataformas.fabricante.length                      > 45||
+                plataformas.dispositivo                  == undefined || plataformas.dispositivo == ''                || plataformas.dispositivo       == null   || plataformas.dispositivo.length                     > 50 
     
         ){
             return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
                 //Validar se o ID existe no BD
                 let resultPlataformas = await buscarPlataformas(parseInt(idPlataformas))
+                console.log(resultPlataformas.status_code === 200);
+                
 
-                if(resultPlataformas.status_code == 200){
+                if(resultPlataformas.status_code === 200 ){
                     //Update
                     //Adiciona um atributo id no JSON para encaminhar id da requisição
-                    usuarios.id = parseInt(idPlataformas)
+                    plataformas.id = parseInt(idPlataformas)
                     let result = await PlataformasDAO.updatePlataformas(plataformas)
                     
                     if(result){
@@ -90,10 +90,10 @@ const PlataformasDAO = require('../../model/DAO/plataformas.js')
 const excluirPlataformas = async function(idPlataformas){
     try {
 
-        if (id == undefined || id == '' || isNaN(idPlataformas)) {
+        if (idPlataformas == undefined || idPlataformas == '' || isNaN(idPlataformas)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
-        if(id){
+        if(idPlataformas){
             let verificar = await PlataformasDAO.selectByIdPlataformas(idPlataformas);
             let resultPlataformas = await PlataformasDAO.deletePlataformas(idPlataformas);
 
@@ -161,7 +161,7 @@ const buscarPlataformas = async function(idPlataformas) {
     try {
         let dadosPlataformas = {};
 
-        if (id == undefined || id == '' || isNaN(idPlataformas)) {
+        if (idPlataformas == undefined || idPlataformas == '' || isNaN(idPlataformas)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 
