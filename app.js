@@ -161,7 +161,7 @@ app.delete('/v1/controle-empresas/empresas/delete/:id', cors(), async function(r
     response.json(resultEmpresas)
 })
 
-app.put('/v1/controle-jogos/jogo/:id', cors(), bodyParserJSON, async function(request, response){
+app.put('/v1/controle-empresas/empresas/:id', cors(), bodyParserJSON, async function(request, response){
 
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
