@@ -17,12 +17,7 @@
  const insertIdiomas = async function(idiomas){
     try {
 
-     let sql = `insert into tbl_idiomas(
-                                        idioma,
-        
-                                    ) values (
-                                        '${idiomas.idioma}'
-                                    )`
+     let sql = `insert into tbl_idiomas(idioma) values ('${idiomas.idioma}')`
 
     //Executa o script SQL no BD e AGUARDA o retorno do BD (insert, update, delete -execute)
     let result = await prisma.$executeRawUnsafe(sql)
@@ -44,7 +39,7 @@
         let sql = `update tbl_idiomas set 
                                          idioma                       = '${idiomas.idioma}'
        
-                                                        where id = ${idiomas.id}`
+                                                        where id_idioma = ${idiomas.id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
         

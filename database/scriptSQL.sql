@@ -60,9 +60,8 @@ genero                         varchar(50) not null
 );
 
 create table tbl_idiomas(
-id_idioma                       int not null primary key auto_increment,
-idioma                          varchar(45) not null
-
+    id_idioma                       int not null primary key auto_increment,
+    idioma                          varchar(45) not null
 );
 
 

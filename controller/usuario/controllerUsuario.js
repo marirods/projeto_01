@@ -15,10 +15,9 @@ const UsuarioDAO = require('../../model/DAO/usuario.js')
     try {
         if(contentType == 'application/json'){
         if(
-            usuarios.nome                    == undefined || usuarios.nome == ''                  || usuarios.nome            == null   || usuarios.nome.length                       > 80 ||
-            usuarios.email                   == undefined || usuarios.email == ''                 || usuarios.email           == null   || usuarios.email.length                      > 10 ||
-            usuarios.username                == undefined || usuarios.username == ''              || usuarios.username        == null   || usuarios.username.length                   > 10 ||
-            id                               == undefined || id == ''                             || id                       == null   || isNaN (id)                                      || id <=0
+            usuarios.nome                    == undefined || usuarios.nome == ''                  || usuarios.nome            == null   || usuarios.nome.length                       > 100 ||
+            usuarios.email                   == undefined || usuarios.email == ''                 || usuarios.email           == null   || usuarios.email.length                      > 50 ||
+            usuarios.username                == undefined || usuarios.username == ''              || usuarios.username        == null   || usuarios.username.length                   > 45 
            
     ){
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
@@ -46,10 +45,9 @@ const UsuarioDAO = require('../../model/DAO/usuario.js')
      try {
         if(contentType == 'application/json'){
             if(
-                usuarios.nome                    == undefined || usuarios.nome == ''                  || usuarios.nome            == null   || usuarios.nome.length                       > 80 ||
-                usuarios.email                   == undefined || usuarios.email == ''                 || usuarios.email        == null      || usuarios.email.length                      > 10 ||
-                usuarios.username                == undefined || usuarios.username == ''              || usuarios.username        == null   || usuarios.username.length                   > 10 ||
-                id                               == undefined || id == ''                             || id                       == null   || isNaN (id)                                      || id <=0 || id <=0
+                usuarios.nome                    == undefined || usuarios.nome == ''                  || usuarios.nome            == null   || usuarios.nome.length                       > 100 ||
+                usuarios.email                   == undefined || usuarios.email == ''                 || usuarios.email        == null      || usuarios.email.length                      > 20 ||
+                usuarios.username                == undefined || usuarios.username == ''              || usuarios.username        == null   || usuarios.username.length                   > 45 
     
         ){
             return MESSAGE.ERROR_REQUIRED_FIELDS //400
@@ -90,10 +88,10 @@ const UsuarioDAO = require('../../model/DAO/usuario.js')
 const excluirUsuario = async function(idUsuario){
     try {
 
-        if (id == undefined || id == '' || isNaN(idUsuario)) {
+        if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
-        if(id){
+        if(idUsuario){
             let verificar = await UsuarioDAO.selectByIdUsuario(idUsuario);
             let resultUsuario = await UsuarioDAO.deleteUsuario(idUsuario);
 
@@ -161,7 +159,7 @@ const buscarUsuario = async function(idUsuario) {
     try {
         let dadosUsuario = {};
 
-        if (id == undefined || id == '' || isNaN(idUsuario)) {
+        if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 

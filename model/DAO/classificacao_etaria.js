@@ -46,7 +46,7 @@
         let sql = `update tbl_classificacao_etaria set 
                                          descricao                       = '${classificacoes.descricao}',
                                          classificacao                   = '${classificacoes.classificacao}'           
-                                    where id = ${classificacoes.id}`
+                                    where id_faixa_etaria = ${classificacoes.id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
         
@@ -57,6 +57,7 @@
 
 
     } catch (error) {
+        console.log(error)
         return false
     }
 

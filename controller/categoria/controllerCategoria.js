@@ -16,9 +16,7 @@ const CategoriaDAO = require('../../model/DAO/categoria.js')
         if(contentType == 'application/json'){
         if(
             categorias.nome                          == undefined || categorias.nome     == ''                  || categorias.nome                 == null   || categorias.nome.length                       > 80 ||
-            categorias.genero                        == undefined || categorias.genero == ''                    || categorias.genero               == null   || categorias.genero.length                     > 10 ||
-            id                                       == undefined || id                           == ''         || id                              == null   || isNaN (id)                                        || id <=0
-           
+            categorias.genero                        == undefined || categorias.genero == ''                    || categorias.genero               == null   || categorias.genero.length                     > 10 
     ){
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
     }else{
@@ -46,14 +44,14 @@ const CategoriaDAO = require('../../model/DAO/categoria.js')
         if(contentType == 'application/json'){
             if(
                 categorias.nome                         == undefined || categorias.nome == ''                       || categorias.nome              == null   || categorias.nome.length                            > 80 ||
-                categorias.genero                       == undefined || categorias.genero == ''                     || categorias.genero            == null   || categorias.genero.length                          > 10 ||
-                id                                      == undefined || id == ''                                    || id                           == null   || isNaN (id)                                             || id <=0 || id <=0
-    
+                categorias.genero                       == undefined || categorias.genero == ''                     || categorias.genero            == null   || categorias.genero.length                          > 10 
         ){
             return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
                 //Validar se o ID existe no BD
-                let resultCategoria = await buscarCategoria(parseInt(id))
+                let resultCategoria = await buscarCategoria(parseInt(idCategoria))
+                console.log(resultCategoria);
+                
 
                 if(resultCategoria.status_code == 200){
                     //Update
@@ -88,10 +86,10 @@ const CategoriaDAO = require('../../model/DAO/categoria.js')
 const excluirCategoria = async function(idCategoria){
     try {
 
-        if (id == undefined || id == '' || isNaN(idCategoria)) {
+        if (idCategoria == undefined || idCategoria == '' || isNaN(idCategoria)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
-        if(id){
+        if(idCategoria){
             let verificar = await CategoriaDAO.selectByIdCategoria(idCategoria);
             let resultCategoria = await CategoriaDAO.deleteCategoria(idCategoria);
 
@@ -159,7 +157,7 @@ const buscarCategoria = async function(idCategoria) {
     try {
         let dadosCategoria = {};
 
-        if (id == undefined || id == '' || isNaN(idCategoria)) {
+        if (idCategoria == undefined || idCategoria == '' || isNaN(idCategoria)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 

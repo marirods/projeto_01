@@ -46,7 +46,7 @@
         let sql = `update tbl_categoria set 
                                          nome                       = '${categorias.nome}',
                                          genero                     = '${categorias.genero}'           
-                                    where id = ${categorias.id}`
+                                    where id_categoria = ${categorias.id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
         

@@ -14,10 +14,11 @@ const ClassificacaoDAO = require('../../model/DAO/classificacao_etaria.js')
  const inserirClassificacao_Etaria = async function(classificacoes, contentType){
     try {
         if(contentType == 'application/json'){
+            console.log(classificacoes);
+            
         if(
             classificacoes.descricao                          == undefined || classificacoes.descricao     == ''                  || classificacoes.descricao                 == null   || classificacoes.descricao.length                       > 80 ||
-            classificacoes.classificacao                      == undefined || classificacoes.classificacao == ''                  || classificacoes.classificacao             == null   || classificacoes.classificacao.length                   > 10 ||
-            id                                                == undefined || id                           == ''                  || id                                       == null   || isNaN (id)                                                 || id <=0
+            classificacoes.classificacao                      == undefined || classificacoes.classificacao == ''                  || classificacoes.classificacao             == null   || classificacoes.classificacao.length                   > 50 
            
     ){
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
@@ -45,15 +46,14 @@ const ClassificacaoDAO = require('../../model/DAO/classificacao_etaria.js')
      try {
         if(contentType == 'application/json'){
             if(
-                classificacoes.descricao                         == undefined || classificacoes.descricao == ''                       || classificacoes.descricao              == null   || classificacoes.descricao.length                            > 80 ||
-                classificacoes.classificacao                     == undefined || classificacoes.classificacao == ''                   || classificacoes.classificacao          == null   || classificacoes.classificacao.length                        > 10 ||
-                id                                               == undefined || id == ''                                             || id                                    == null   || isNaN (id)                                                      || id <=0 || id <=0
+                classificacoes.descricao                         == undefined || classificacoes.descricao == ''                       || classificacoes.descricao              == null   || classificacoes.descricao.length                            > 45 ||
+                classificacoes.classificacao                     == undefined || classificacoes.classificacao == ''                   || classificacoes.classificacao          == null   || classificacoes.classificacao.length                        > 50 
     
         ){
             return MESSAGE.ERROR_REQUIRED_FIELDS //400
             }else{
                 //Validar se o ID existe no BD
-                let resultClassificacao = await buscarClassicacao(parseInt(id))
+                let resultClassificacao = await buscarClassificacao_Etaria(parseInt(idClassificacao))
 
                 if(resultClassificacao.status_code == 200){
                     //Update
@@ -79,6 +79,7 @@ const ClassificacaoDAO = require('../../model/DAO/classificacao_etaria.js')
         }
 
      } catch (error) {
+        console.log(error)
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
 
      }
@@ -88,10 +89,10 @@ const ClassificacaoDAO = require('../../model/DAO/classificacao_etaria.js')
 const excluirClassificacao_Etaria = async function(idClassificacao){
     try {
 
-        if (id == undefined || id == '' || isNaN(idClassificacao)) {
+        if (idClassificacao == undefined || idClassificacao == '' || isNaN(idClassificacao)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
-        if(id){
+        if(idClassificacao){
             let verificar = await ClassificacaoDAO.selectByIdClassificacoes(idClassificacao);
             let resultClassificacao = await ClassificacaoDAO.deleteClassificacao_Etaria(idClassificacao);
 
@@ -159,7 +160,7 @@ const buscarClassificacao_Etaria = async function(idClassificacao) {
     try {
         let dadosClassificacao = {};
 
-        if (id == undefined || id == '' || isNaN(idClassificacao)) {
+        if (idClassificacao == undefined || idClassificacao == '' || isNaN(idClassificacao)) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 

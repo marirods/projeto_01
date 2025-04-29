@@ -171,6 +171,8 @@ app.put('/v1/controle-empresas/empresas/:id', cors(), bodyParserJSON, async func
 
     //Recebe os dados do jogo encaminhando no body da requisição
     let dadosBody = request.body
+    console.log(dadosBody);
+    
 
     let resultEmpresas = await controllerEmpresas.atualizarEmpresas(dadosBody, idEmpresas, contentType)
 
@@ -536,6 +538,6 @@ app.put('/v1/controle-idioma/idioma/:id', cors(), bodyParserJSON, async function
 
 
 
-app.listen(8080, function(){
+app.listen(3030, function(){
     console.log('API aguardando requisições ...')
 })
