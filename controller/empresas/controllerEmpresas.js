@@ -174,7 +174,7 @@ const buscarEmpresas = async function(idEmpresas) {
             dadosEmpresas.status = true;
             dadosEmpresas.status_code = 200;
             dadosEmpresas.items = resultEmpresas.length;
-            dadosEmpresas.games = resultEmpresas;
+            dadosEmpresas.empresas = resultEmpresas;
 
             return dadosEmpresas
         } else {

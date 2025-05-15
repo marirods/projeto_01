@@ -9,6 +9,8 @@ const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar o CRUD no BD
 const jogoDAO = require('../../model/DAO/jogo.js')
+const controllerEmpresas = require('../empresas/controllerEmpresas.js')
+const { insertEmpresas } = require('../../model/DAO/empresas.js')
 
  //Função para inserir um novo jogo
  const inserirJogo = async function(jogo, contentType){
@@ -21,7 +23,10 @@ const jogoDAO = require('../../model/DAO/jogo.js')
             jogo.tamanho                 == undefined || jogo.tamanho.length   > 10       ||
             jogo.descricao               == undefined || 
             jogo.foto_capa               == undefined || jogo.foto_capa.length > 200      ||
-            jogo.link                    == undefined || jogo.link.length      > 200          
+            jogo.link                    == undefined || jogo.link.length      > 200  ||
+            jogo.id_empresas                           == undefined || jogo.id_empresas == ''      || jogo.id_empresas == null      || isNaN (jogo.id_empresas) || jogo.id_empresas <=0   ||
+            jogo.id_faixa_etaria                           == undefined || jogo.id_faixa_etaria == ''      || jogo.id_faixa_etaria == null      || isNaN (jogo.id_faixa_etaria) || jogo.id_faixa_etaria <=0     
+
 
     ){
         return MESSAGE.ERROR_REQUIRED_FIELDS //400
@@ -56,7 +61,9 @@ const jogoDAO = require('../../model/DAO/jogo.js')
                 jogo.descricao               == undefined || 
                 jogo.foto_capa               == undefined || jogo.foto_capa.length > 200      ||
                 jogo.link                    == undefined || jogo.link.length      > 200      ||
-                id                           == undefined || id == ''      || id == null      || isNaN (id) || id <=0
+                id                           == undefined || id == ''      || id == null      || isNaN (id) || id <=0 ||
+                jogo.id_empresas                           == undefined || jogo.id_empresas == ''      || jogo.id_empresas == null      || isNaN (jogo.id_empresas) || jogo.id_empresas <=0   ||
+                jogo.id_faixa_etaria                           == undefined || jogo.id_faixa_etaria == ''      || jogo.id_faixa_etaria == null      || isNaN (jogo.id_faixa_etaria) || jogo.id_faixa_etaria <=0     
     
         ){
             return MESSAGE.ERROR_REQUIRED_FIELDS //400
@@ -132,22 +139,33 @@ const excluirJogo = async function(id){
 //Função para retornar todos os jogos
 const listarJogo = async function(){
     try {
+
+        const arrayJogos = []
         let dadosJogos = {}
 
      //Chama a função para retornar os dados do jogo
      let resultJogo = await jogoDAO.selectAllJogo()
+
      if(resultJogo != false || typeof(resultJogo) == 'object'){
-
      if(resultJogo.length > 0){
 
-     }
-
-    //Cria um objeto do tipo JSON para retornar a lista de jogos
-     if(resultJogo.length > 0){
         dadosJogos.status = true
         dadosJogos.status_code = 200
         dadosJogos.items = resultJogo.length
-        dadosJogos.games = resultJogo
+
+        for(itemJogo of resultJogo){
+
+            let dadosEmpresas = await controllerEmpresas.buscarEmpresas(itemJogo.id_empresas)
+            itemJogo.empresas = dadosEmpresas.empresas
+            
+            delete itemJogo.id_empresas
+
+
+           arrayJogos.push(itemJogo)
+        }
+        
+        dadosJogos.games = arrayJogos
+        
 
         return dadosJogos //200
      }else{
@@ -158,6 +176,8 @@ const listarJogo = async function(){
         return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
     }
 } catch (error) {
+    console.log(error);
+    
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 
@@ -166,27 +186,43 @@ const listarJogo = async function(){
 //Função para buscar um jogo
 const buscarJogo = async function(id) {
     try {
-        let dadosJogos = {};
+        let arrayJogos = []
+        let dadosJogos = {} // <-- Move para fora do if
 
-        if (id == undefined || id == '' || isNaN(id)) {
+        if (id == undefined || id == '' || id == null || isNaN(id) || id <= 0) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 
-        let resultJogo = await jogoDAO.selectByIdJogo(id);
+        console.log(parseInt(id));
+        
 
-        if (resultJogo && resultJogo.length > 0) {
-            dadosJogos.status = true;
-            dadosJogos.status_code = 200;
-            dadosJogos.items = resultJogo.length;
-            dadosJogos.games = resultJogo;
+        let resultJogo = await jogoDAO.selectByIdJogo(parseInt(id));
+        
+        
+        if (resultJogo != false && typeof(resultJogo) == 'object') {
+            if (resultJogo.length > 0) {
+                dadosJogos.status = true;
+                dadosJogos.status_code = 200;
 
-            return dadosJogos
+                for (let itemEmpresas of resultJogo) {
+                    let dadosEmpresas = await controllerEmpresas.buscarEmpresas(itemEmpresas.id_empresas);
+                    itemEmpresas.empresas = dadosEmpresas.empresas;
+                    delete itemEmpresas.id_empresas;
+
+                    arrayJogos.push(itemEmpresas);
+                }
+
+                dadosJogos.games = arrayJogos;
+                return dadosJogos;
+            } else {
+                return MESSAGE.ERROR_NOT_FOUND; // 404
+            }
         } else {
-            return MESSAGE.ERROR_NOT_FOUND
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL; // 500
         }
     } catch (error) {
-
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+        console.log(error);
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER; // 500
     }
 }
 

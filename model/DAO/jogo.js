@@ -24,7 +24,9 @@
                                         tamanho, 
                                         descricao,
                                         foto_capa,
-                                        link
+                                        link,
+                                        id_empresas,
+                                        id_faixa_etaria
                                     ) values (
                                         '${jogo.nome}',
                                         '${jogo.data_lancamento}',
@@ -32,7 +34,10 @@
                                         '${jogo.tamanho}',
                                         '${jogo.descricao}',
                                         '${jogo.foto_capa}',
-                                        '${jogo.link}'
+                                        '${jogo.link}',
+                                        '${jogo.id_empresas}',
+                                        '${jogo.id_faixa_etaria}'
+
                                     )`
 
     //Executa o script SQL no BD e AGUARDA o retorno do BD (insert, update, delete -execute)
@@ -58,7 +63,9 @@
                                          tamanho             = '${jogo.tamanho}', 
                                          descricao           = '${jogo.descricao}',
                                          foto_capa           = '${jogo.foto_capa}', 
-                                         link                = '${jogo.link}'                
+                                         link                = '${jogo.link}',
+                                         id_empresas         = '${jogo.id_empresas}',
+                                         id_faixa_etaria     = '${jogo.id_faixa_etaria}'                
                                     where id = ${jogo.id}`
 
         let result = await prisma.$executeRawUnsafe(sql)
@@ -111,6 +118,8 @@ try {
 const selectByIdJogo = async function(id){
 try {
     let sql = `SELECT * FROM tbl_jogo WHERE id = ${id}`
+    console.log(sql);
+    
     let result = await prisma.$queryRawUnsafe(sql)
 
     if(result.length > 0)

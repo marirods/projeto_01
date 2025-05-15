@@ -1,21 +1,24 @@
-
 use db_controle_jogos_bb;
+select * from tbl_classificacao_etaria;
 
 create table tbl_jogo (
-id                int not null primary key auto_increment,
-nome              varchar(80) not null,
-data_lancamento   date not null,
-versao            varchar(10) not null,
-tamanho           varchar(10), 
-descricao         text,
-foto_capa         varchar(200),
-link              varchar(200)
-
+	id                int not null primary key auto_increment,
+	nome              varchar(80) not null,
+	data_lancamento   date not null,
+	versao            varchar(10) not null,
+	tamanho           varchar(10), 
+	descricao         text,
+	foto_capa         varchar(200),
+	link              varchar(200),
+	id_empresas int not null,
+	id_faixa_etaria int not null,
+    FOREIGN KEY (id_empresas) REFERENCES tbl_empresas (id_empresas),
+    FOREIGN KEY (id_faixa_etaria) REFERENCES tbl_classificacao_etaria (id_faixa_etaria)
 );
 
 show tables;
 desc tbl_idiomas;
-select * from tbl_jogo;
+
 
 
 create table tbl_empresas (
