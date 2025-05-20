@@ -9,8 +9,11 @@ const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar o CRUD no BD
 const CategoriaDAO = require('../../model/DAO/categoria.js')
+const ControllerJogo = require('../jogo/controllerJogo.js')
+const {insertJogo} = require('../../model/DAO/jogo.js')
 
- //Função para inserir uma nova empresa
+
+//Função para inserir uma nova empresa
  const inserirCategoria = async function(categorias, contentType){
     try {
         if(contentType == 'application/json'){
@@ -121,60 +124,83 @@ const excluirCategoria = async function(idCategoria){
 //Função para retornar todos os jogos
 const listarCategoria = async function(){
     try {
+       
+        const arrayCategoria = []
+
         let dadosCategoria = {}
 
      //Chama a função para retornar os dados do jogo
      let resultCategoria = await CategoriaDAO.selectAllCategoria()
+
      if(resultCategoria != false || typeof(resultCategoria) == 'object'){
 
-     if(resultCategoria.length > 0){
-
-     }
-
-    //Cria um objeto do tipo JSON para retornar a lista de jogos
      if(resultCategoria.length > 0){
         dadosCategoria.status = true
         dadosCategoria.status_code = 200
         dadosCategoria.items = resultCategoria.length
-        dadosCategoria.games = resultCategoria
+
+        for(itemCategoria of resultCategoria){
+           let dadosJogos = await ControllerJogo.buscarJogo(itemCategoria.id)
+           itemCategoria.jogo = dadosJogos.jogo
+
+            delete itemCategoria.id
+
+            arrayCategoria.push(itemCategoria)
+        }
+    
+        dadosCategoria.games = arrayCategoria
 
         return dadosCategoria //200
      }else{
         return MESSAGE.ERROR_NOT_FOUND //404
+     }   
+       
+     }else{
+        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
      }
 
-    }else{
-        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
-    }
 } catch (error) {
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 
 }
 
+
 //Função para buscar um jogo
 const buscarCategoria = async function(idCategoria) {
     try {
-        let dadosCategoria = {};
+        let arrayCategoria = []
+        let dadosCategoria = {}
 
-        if (idCategoria == undefined || idCategoria == '' || isNaN(idCategoria)) {
+        if (idCategoria == undefined || idCategoria == '' || id == null || isNaN(idCategoria) || id <= 0) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 
-        let resultCategoria = await CategoriaDAO.selectByIdCategoria(idCategoria);
+        let resultCategoria = await CategoriaDAO.selectByIdCategoria(parseInt(idCategoria));
 
-        if (resultCategoria && resultCategoria.length > 0) {
-            resultCategoria.status = true;
-            dadosCategoria.status_code = 200;
-            dadosCategoria.items = resultCategoria.length;
-            dadosCategoria.games = resultCategoria;
+        if (resultCategoria != false && typeof(resultCategoria) == 'object') {
+            if (resultCategoria.length > 0){
+                dadosCategoria.status = true;
+                dadosCategoria.status_code = 200;
 
-            return dadosCategoria
+                 for (let itemJogo of resultCategoria) {
+                     let dadosJogos = await ControllerJogo.buscarJogo(itemJogo.id_jogo)
+                     itemJogo.jogo = dadosJogos.jogo;
+                     delete itemJogo.id;
+                
+                    arrayJogos.push(itemJogo);
+                 }
+
+                 dadosCategoria.games = arrayCategoria
+                 return dadosCategoria
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND
+            }
+            
         } else {
-            return MESSAGE.ERROR_NOT_FOUND
+           return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
         }
     } catch (error) {
-
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }

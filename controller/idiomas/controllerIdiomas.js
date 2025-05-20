@@ -11,6 +11,8 @@ const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar o CRUD no BD
 const IdiomasDAO = require('../../model/DAO/idiomas.js')
+const controllerJogo = require('../jogo/controllerJogo.js')
+const {insertJogo} = require('../../model/DAO/jogo.js')
 
  //Função para inserir uma nova empresa
  const inserirIdiomas = async function(idioma, contentType){
@@ -121,67 +123,83 @@ const excluirIdiomas = async function(idIdioma){
 
 //Função para retornar todos os jogos
 const listarIdiomas = async function(){
-    try {
-        let dadosIdiomas = {}
-
-     //Chama a função para retornar os dados do jogo
-     let resultIdiomas = await IdiomasDAO.selectAllIdiomas()
-     if(resultIdiomas != false || typeof(resultIdiomas) == 'object'){
-
-     if(resultIdiomas.length > 0){
-
-     }
-
-    //Cria um objeto do tipo JSON para retornar a lista de jogos
-     if(resultIdiomas.length > 0){
-        dadosIdiomas.status = true
-        dadosIdiomas.status_code = 200
-        dadosIdiomas.items = resultIdiomas.length
-        dadosIdiomas.games = resultIdiomas
-
-        return dadosIdiomas //200
-     }else{
-        return MESSAGE.ERROR_NOT_FOUND //404
-     }
-
-    }else{
-        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+     try {
+            const arrayIdiomas = []
+            let dadosIdiomas = {}
+    
+         //Chama a função para retornar os dados do jogo
+         let resultIdiomas = await IdiomasDAO.selectAllIdiomas()
+    
+         if(resultIdiomas != false || typeof(resultIdiomas) == 'object'){
+    
+         if(resultIdiomas.length > 0){
+            dadosIdiomas.status = true
+            dadosIdiomas.status_code = 200
+            dadosIdiomas.items = resultIdiomas.length
+    
+            for(itemIdioma of resultIdiomas){
+                let dadosJogos = await controllerJogo.buscarJogo(itemIdioma.id)
+                itemIdioma.jogo = dadosJogos.jogo
+    
+                delete itemIdioma.id
+    
+                arrayIdiomas.push(itemIdioma)
+            }
+    
+            dadosIdiomas.games = arrayIdiomas
+            
+            return dadosIdiomas 
+         }else{
+            return  MESSAGE.ERROR_NOT_FOUND 
+         } 
+    
+         }else{
+            return  MESSAGE.ERROR_INTERNAL_SERVER_MODEL//404
+         }
+    
+    } catch (error) {
+            return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+        }
+    
     }
-} catch (error) {
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
-    }
-
-}
 
 //Função para buscar um jogo
 const buscarIdiomas = async function(idIdioma) {
 
-    
-    try {
-        let dadosIdiomas = {};
-
-        if (idIdioma == undefined || idIdioma == '' || isNaN(idIdioma)) {
-            return MESSAGE.ERROR_REQUIRED_FIELDS;
-        }
-
-        let resultIdiomas = await IdiomasDAO.selectByIdIdiomas(idIdioma);
-
-        if (resultIdiomas && resultIdiomas.length > 0) {
-            resultIdiomas.status = true;
-            dadosIdiomas.status_code = 200;
-            dadosIdiomas.items = resultIdiomas.length;
-            dadosIdiomas.idiomas = resultIdiomas;
-
-            return dadosIdiomas
-        } else {
-            return MESSAGE.ERROR_NOT_FOUND
-        }
-    } catch (error) {
-        console.log(error)
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
-    }
-}
-
+  try {
+          let arrayIdiomas = []
+          let dadosIdiomas = {};
+  
+          if (idIdioma == undefined || idIdioma == '' || isNaN(idIdioma) || idIdioma <= 0 ) {
+              return MESSAGE.ERROR_REQUIRED_FIELDS;
+          }
+  
+          let resultIdiomas = await IdiomasDAO.selectByIdIdiomas(parseInt(idIdioma));
+  
+          if (resultIdiomas != false && typeof(resultIdiomas) == 'object') {
+              if(resultIdiomas.length > 0){
+                  dadosIdiomas.status = true;
+                  dadosIdiomas.status_code = 200;
+  
+                  for(let itemJogo of resultIdiomas){
+                      let dadosJogos = await controllerJogo.buscarJogo(itemJogo.id)
+                      itemJogo.jogo = dadosJogos.jogo
+                      delete itemJogo.id
+  
+                      arrayIdiomas.push(itemJogo)
+                  }
+                  dadosIdiomas.games = arrayIdiomas
+                  return dadosIdiomas
+              }else{
+                  return MESSAGE.ERROR_NOT_FOUND
+              }
+          } else {
+              return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+          }
+      } catch (error) {
+          return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+      }
+  }
 module.exports = {
     inserirIdiomas,
     atualizarIdiomas,

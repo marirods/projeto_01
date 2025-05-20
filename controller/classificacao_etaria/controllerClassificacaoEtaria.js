@@ -9,6 +9,8 @@ const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar o CRUD no BD
 const ClassificacaoDAO = require('../../model/DAO/classificacao_etaria.js')
+const controllerJogo = require('../jogo/controllerJogo.js')
+const {insertJogo} = require('../../model/DAO/jogo.js')
 
  //Função para inserir uma nova empresa
  const inserirClassificacao_Etaria = async function(classificacoes, contentType){
@@ -124,31 +126,42 @@ const excluirClassificacao_Etaria = async function(idClassificacao){
 //Função para retornar todos os jogos
 const listarClassificacao_Etaria = async function(){
     try {
+
+        const arrayClassificacao = []
         let dadosClassificacao = {}
 
      //Chama a função para retornar os dados do jogo
      let resultClassificacao = await ClassificacaoDAO.selectAllClassificacoes()
+
      if(resultClassificacao != false || typeof(resultClassificacao) == 'object'){
-
      if(resultClassificacao.length > 0){
 
-     }
 
-    //Cria um objeto do tipo JSON para retornar a lista de jogos
-     if(resultClassificacao.length > 0){
         dadosClassificacao.status = true
         dadosClassificacao.status_code = 200
         dadosClassificacao.items = resultClassificacao.length
-        dadosClassificacao.games = resultClassificacao
 
-        return dadosClassificacao //200
+        for(itemClassificacao of resultClassificacao){
+            let dadosJogos = await controllerJogo.buscarJogo(itemClassificacao.id)
+            itemClassificacao.jogo = dadosJogos.jogo
+
+            delete itemClassificacao.id
+
+            arrayClassificacao.push(itemClassificacao)
+        }
+
+        dadosClassificacao.games = arrayClassificacao
+
+        return dadosClassificacao
      }else{
         return MESSAGE.ERROR_NOT_FOUND //404
      }
 
-    }else{
+     }else{
         return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
-    }
+     }
+
+   
 } catch (error) {
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
@@ -158,26 +171,36 @@ const listarClassificacao_Etaria = async function(){
 //Função para buscar um jogo
 const buscarClassificacao_Etaria = async function(idClassificacao) {
     try {
+        let arrayClassificacao = []
         let dadosClassificacao = {};
 
-        if (idClassificacao == undefined || idClassificacao == '' || isNaN(idClassificacao)) {
+        if (idClassificacao == undefined || idClassificacao == '' || isNaN(idClassificacao) || idClassificacao <= 0 ) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 
-        let resultClassificacao = await ClassificacaoDAO.selectByIdClassificacoes(idClassificacao);
+        let resultClassificacao = await ClassificacaoDAO.selectByIdClassificacoes(parseInt(idClassificacao));
 
-        if (resultClassificacao && resultClassificacao.length > 0) {
-            resultClassificacao.status = true;
-            dadosClassificacao.status_code = 200;
-            dadosClassificacao.items = resultClassificacao.length;
-            dadosClassificacao.games = resultClassificacao;
+        if (resultClassificacao != false && typeof (resultClassificacao) == 'object') {
+            if(resultClassificacao.length > 0){
+                dadosClassificacao.status = true;
+                dadosClassificacao.status_code = 200;
 
-            return dadosClassificacao
+                for(let itemJogo of resultClassificacao){
+                    let dadosJogos = await controllerJogo.buscarJogo(itemJogo.id)
+                    itemJogo.jogo = dadosJogos.jogo
+                    delete itemJogo.id
+
+                    arrayClassificacao.push(itemJogo)
+                }
+                dadosClassificacao.games = arrayClassificacao
+                return dadosClassificacao
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND
+            }
         } else {
-            return MESSAGE.ERROR_NOT_FOUND
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
         }
     } catch (error) {
-
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }

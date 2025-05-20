@@ -9,7 +9,8 @@ const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar o CRUD no BD
 const UsuarioDAO = require('../../model/DAO/usuario.js')
-
+const controllerJogo = require('../jogo/controllerJogo.js')
+const {insertJogo} = require('../../model/DAO/jogo.js')
  //Função para inserir uma nova empresa
  const inserirUsuario = async function(usuarios, contentType){
     try {
@@ -122,64 +123,84 @@ const excluirUsuario = async function(idUsuario){
 
 //Função para retornar todos os jogos
 const listarUsuario = async function(){
-    try {
-        let dadosUsuario = {}
-
-     //Chama a função para retornar os dados do jogo
-     let resultUsuario = await UsuarioDAO.selectAllUsuario()
-     if(resultUsuario != false || typeof(resultUsuario) == 'object'){
-
-     if(resultUsuario.length > 0){
-
-     }
-
-    //Cria um objeto do tipo JSON para retornar a lista de jogos
-     if(resultUsuario.length > 0){
-        dadosUsuario.status = true
-        dadosUsuario.status_code = 200
-        dadosUsuario.items = resultUsuario.length
-        dadosUsuario.games = resultUsuario
-
-        return dadosUsuario //200
-     }else{
-        return MESSAGE.ERROR_NOT_FOUND //404
-     }
-
-    }else{
-        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+     try {
+    
+            const arrayUsuario = []
+            let dadosUsuario = {}
+    
+         //Chama a função para retornar os dados do jogo
+         let resultUsuario = await UsuarioDAO.selectAllUsuario()
+    
+         if(resultUsuario != false || typeof(resultUsuario) == 'object'){
+         if(resultUsuario.length > 0){
+    
+    
+            dadosUsuario.status = true
+            dadosUsuario.status_code = 200
+            dadosUsuario.items = resultUsuario.length
+    
+            for(itemUsuario of resultUsuario){
+                let dadosJogos = await controllerJogo.buscarJogo(itemUsuario.id)
+                itemUsuario.jogo = dadosJogos.jogo
+    
+                delete itemUsuario.id
+    
+                arrayUsuario.push(itemUsuario)
+            }
+    
+            dadosUsuario.games = arrayUsuario
+    
+            return dadosUsuario
+         }else{
+            return MESSAGE.ERROR_NOT_FOUND //404
+         }
+    
+         }else{
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+         }
+    
+       
+    } catch (error) {
+            return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+        }
+    
     }
-} catch (error) {
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
-    }
-
-}
-
 //Função para buscar um jogo
 const buscarUsuario = async function(idUsuario) {
-    try {
-        let dadosUsuario = {};
-
-        if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario)) {
-            return MESSAGE.ERROR_REQUIRED_FIELDS;
+     try {
+            let arrayUsuario = []
+            let dadosUsuario = {};
+    
+            if (idUsuario == undefined || idUsuario == '' || isNaN(idUsuario) || idUsuario <= 0 ) {
+                return MESSAGE.ERROR_REQUIRED_FIELDS;
+            }
+    
+            let resultUsuario = await UsuarioDAO.selectByIdUsuario(parseInt(idUsuario));
+    
+            if (resultUsuario != false && typeof (resultUsuario) == 'object') {
+                if(resultUsuario.length > 0){
+                    dadosUsuario.status = true;
+                    dadosUsuario.status_code = 200;
+    
+                    for(let itemJogo of resultUsuario){
+                        let dadosJogos = await controllerJogo.buscarJogo(itemJogo.id)
+                        itemJogo.jogo = dadosJogos.jogo
+                        delete itemJogo.id
+    
+                        arrayUsuario.push(itemJogo)
+                    }
+                    dadosUsuario.games = arrayUsuario
+                    return dadosUsuario
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND
+                }
+            } else {
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+            }
+        } catch (error) {
+            return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
         }
-
-        let resultUsuario = await UsuarioDAO.selectByIdUsuario(idUsuario);
-
-        if (resultUsuario && resultUsuario.length > 0) {
-            dadosUsuario.status = true;
-            dadosUsuario.status_code = 200;
-            dadosUsuario.items = resultUsuario.length;
-            dadosUsuario.games = resultUsuario;
-
-            return dadosUsuario
-        } else {
-            return MESSAGE.ERROR_NOT_FOUND
-        }
-    } catch (error) {
-
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
-}
 
 module.exports = {
     inserirUsuario,

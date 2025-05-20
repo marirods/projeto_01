@@ -9,6 +9,8 @@ const MESSAGE = require('../../modulo/config.js')
 
 //Import do DAO para realizar o CRUD no BD
 const PlataformasDAO = require('../../model/DAO/plataformas.js')
+const controllerJogo = require('../jogo/controllerJogo.js')
+const {insertJogo} = require('../../model/DAO/jogo.js')
 
  //Função para inserir uma nova empresa
  const inserirPlataformas = async function(plataformas, contentType){
@@ -125,31 +127,39 @@ const excluirPlataformas = async function(idPlataformas){
 //Função para retornar todos os jogos
 const listarPlataformas = async function(){
     try {
+        const arrayPlataformas = []
         let dadosPlataformas = {}
 
      //Chama a função para retornar os dados do jogo
      let resultPlataformas = await PlataformasDAO.selectAllPlataformas()
+
      if(resultPlataformas != false || typeof(resultPlataformas) == 'object'){
 
-     if(resultPlataformas.length > 0){
-
-     }
-
-    //Cria um objeto do tipo JSON para retornar a lista de jogos
      if(resultPlataformas.length > 0){
         dadosPlataformas.status = true
         dadosPlataformas.status_code = 200
         dadosPlataformas.items = resultPlataformas.length
-        dadosPlataformas.games = resultPlataformas
 
-        return dadosPlataformas //200
+        for(itemPlataforma of resultPlataformas){
+            let dadosJogos = await controllerJogo.buscarJogo(itemPlataforma.id)
+            itemPlataforma.jogo = dadosJogos.jogo
+
+            delete itemPlataforma.id
+
+            arrayPlataformas.push(itemPlataforma)
+        }
+
+        dadosPlataformas.games = arrayPlataformas
+        
+        return dadosPlataformas 
      }else{
-        return MESSAGE.ERROR_NOT_FOUND //404
+        return  MESSAGE.ERROR_NOT_FOUND 
+     } 
+
+     }else{
+        return  MESSAGE.ERROR_INTERNAL_SERVER_MODEL//404
      }
 
-    }else{
-        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
-    }
 } catch (error) {
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
@@ -159,26 +169,36 @@ const listarPlataformas = async function(){
 //Função para buscar um jogo
 const buscarPlataformas = async function(idPlataformas) {
     try {
+        let arrayPlataformas = []
         let dadosPlataformas = {};
 
-        if (idPlataformas == undefined || idPlataformas == '' || isNaN(idPlataformas)) {
+        if (idPlataformas == undefined || idPlataformas == '' || isNaN(idPlataformas) || idPlataformas <= 0 ) {
             return MESSAGE.ERROR_REQUIRED_FIELDS;
         }
 
-        let resultPlataformas = await PlataformasDAO.selectByIdPlataformas(idPlataformas);
+        let resultPlataformas = await PlataformasDAO.selectByIdPlataformas(parseInt(idPlataformas));
 
-        if (resultPlataformas && resultPlataformas.length > 0) {
-            dadosPlataformas.status = true;
-            dadosPlataformas.status_code = 200;
-            dadosPlataformas.items = resultPlataformas.length;
-            dadosPlataformas.games = resultPlataformas;
+        if (resultPlataformas != false && typeof(resultPlataformas) == 'object') {
+            if(resultPlataformas.length > 0){
+                dadosPlataformas.status = true;
+                dadosPlataformas.status_code = 200;
 
-            return dadosPlataformas
+                for(let itemJogo of resultPlataformas){
+                    let dadosJogos = await controllerJogo.buscarJogo(itemJogo.id)
+                    itemJogo.jogo = dadosJogos.jogo
+                    delete itemJogo.id
+
+                    arrayPlataformas.push(itemJogo)
+                }
+                dadosPlataformas.games = arrayPlataformas
+                return dadosPlataformas
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND
+            }
         } else {
-            return MESSAGE.ERROR_NOT_FOUND
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
         }
     } catch (error) {
-
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
