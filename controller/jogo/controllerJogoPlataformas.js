@@ -9,24 +9,24 @@
 const message = require('../../modulo/config.js')
 
 //Import do aquivo para realizar o CRUD de dados no Banco de Dados
-const jogoCategoriaDAO = require('../../model/DAO/jogo_categoria.js')
+const jogoPlataformasDAO = require('../../model/DAO/jogo_plataformas.js')
 
 //Função para tratar a inserção de um novo genero no DAO
-const inserirJogoCategoria = async function(jogoCategoria, contentType){
+const inserirJogoPlataformas = async function(jogoPlataformas, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
         {
                 if (
-                    jogoCategoria.id_jogo              == ''              || jogoCategoria.id_jogo     == undefined        || jogoCategoria.id_jogo  == null || isNaN(jogoCategoria.id_jogo)  || jogoCategoria.id_jogo <=0 ||
-                    jogoCategoria.id_categoria            == ''           || jogoCategoria.id_categoria    == undefined    || jogoCategoria.id_categoria == null || isNaN(jogoCategoria.id_categoria) || jogoCategoria.id_categoria<=0
+                    jogoPlataformas.id_jogo                 == ''                || jogoPlataformas.id_jogo         == undefined          || jogoPlataformas.id_jogo  == null       || isNaN(jogoPlataformas.id_jogo)        || jogoPlataformas.id_jogo          <=0 ||
+                    jogoPlataformas.id_plataformas            == ''              || jogoPlataformas.id_plataformas    == undefined        || jogoPlataformas.id_plataformas == null || isNaN(jogoPlataformas.id_plataformas) || jogoPlataformas.id_plataformas   <=0
                 )
                 {
                     return message.ERROR_REQUIRED_FIELDS //400
                 }else{
                     //Chama a função para inserir no BD e aguarda o retorno da função
-                    let resultcategoria = await jogoCategoriaDAO.insertJogoCategoria(jogoCategoria)
+                    let resultplataformas = await jogoPlataformasDAO.selectByIdJogoPlataformas
 
-                    if(resultcategoria)
+                    if(resultplataformas)
                         return message.SUCCESS_CREATED_ITEM //201
                     else
                         return message.ERROR_INTERNAL_SERVER_MODEL //500
@@ -40,27 +40,27 @@ const inserirJogoCategoria = async function(jogoCategoria, contentType){
 }
 
 //Função para tratar a atualização de um genero no DAO
-const atualizarJogoCategoria = async function(id, jogoCategoria, contentType){
+const atualizarJogoPlataformas = async function(id, jogoPlataformas, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
             {
                 if (id                                == ''           || id                           == undefined    || id                            == null || isNaN(id)                          || id                          <= 0   ||
-                jogoCategoria.id_jogo                 == ''           || jogoCategoria.id_jogo        == undefined    || jogoCategoria.id_jogo         == null || isNaN(jogoCategoria.id_jogo)       || jogoCategoria.id_jogo       <=0 ||
-                jogoCategoria.id_categoria            == ''           || jogoCategoria.id_categoria   == undefined    || jogoCategoria.id_categoria    == null || isNaN(jogoCategoria.id_categoria)  || jogoCategoria.id_categoria  <=0
+                jogoPlataformas.id_jogo                 == ''           || jogoPlataformas.id_jogo        == undefined    || jogoPlataformas.id_jogo         == null || isNaN(jogoPlataformas.id_jogo)       || jogoPlataformas.id_jogo       <=0 ||
+                jogoPlataformas.id_plataformas            == ''           || jogoPlataformas.id_plataformas   == undefined    || jogoPlataformas.id_plataformas    == null || isNaN(jogoPlataformas.id_plataformas)  || jogoPlataformas.id_plataformas  <=0
                 )
                 {
                     return message.ERROR_REQUIRED_FIELDS //400
                 }else{
                     //Validação para verificar se o ID existe no BD
-                    let resultcategoria = await jogoCategoriaDAO.selectByIdJogoCategoria(parseInt(id))
+                    let resultplataformas = await jogoPlataformasDAO.selectByIdJogoPlataformas(parseInt(id))
 
-                    if(resultcategoria != false || typeof(resultcategoria) == 'object'){
-                        if(resultcategoria.length > 0 ){
+                    if(resultplataformas != false || typeof(resultplataformas) == 'object'){
+                        if(resultplataformas.length > 0 ){
                             //Update
                             //Adiciona o ID do genero no JSON com os dados
-                            categoria.id = parseInt(id)
+                            plataformas.id = parseInt(id)
 
-                            let result = await jogoCategoriaDAO.updateJogoCategoria(jogoCategoria)
+                            let result = await jogoPlataformasDAO.updateJogoPlataformas(jogoPlataformas)
 
                             if(result){
                                 return message.SUCCESS_UPDATED_ITEM //200
@@ -83,20 +83,20 @@ const atualizarJogoCategoria = async function(id, jogoCategoria, contentType){
 }
 
 //Função para tratar a exclusão de um genero no DAO
-const excluirJogoCategoria = async function(id){
+const excluirJogoPlataformas = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
             return message.ERROR_REQUIRED_FIELDS //400
         }else{
 
             //Funcção que verifica se  ID existe no BD
-            let resultcategoria = await jogoCategoriaDAO.selectByIdJogoCategoria(parseInt(id))
+            let resultplataformas = await jogoPlataformasDAO.selectByIdJogoPlataformas(parseInt(id))
 
-            if(resultcategoria != false || typeof(resultcategoria) == 'object'){
+            if(resultplataformas != false || typeof(resultplataformas) == 'object'){
                 //Se existir, faremos o delete
-                if(resultcategoria.length > 0){
+                if(resultplataformas.length > 0){
                     //delete
-                    let result = await jogoCategoriaDAO.deleteJogoCategoria(parseInt(id))
+                    let result = await jogoPlataformasDAO.deleteJogoPlataformas(parseInt(id))
 
                     if(result){
                         return message.SUCCESS_DELETED_ITEM //200
@@ -116,22 +116,22 @@ const excluirJogoCategoria = async function(id){
 }
 
 //Função para tratar o retorno de uma lista de generos do DAO
-const listarJogoCategoria = async function(){
+const listarJogoPlataformas = async function(){
     try {
         //Objeto do tipo JSON
-        let dadoscategoria = {}
+        let dadosplataformas = {}
         //Chama a função para retornar os generos cadastrados
-        let resultcategoria = await jogoCategoriaDAO.selectAllJogoCategoria()
+        let resultplataformas = await jogoPlataformasDAO.selectAllJogoPlataformas()
 
-        if(resultcategoria != false || typeof(resultcategoria) == 'object'){
-            if(resultcategoria.length > 0){
+        if(resultplataformas != false || typeof(resultplataformas) == 'object'){
+            if(resultplataformas.length > 0){
                 //Criando um JSON de retorno de dados para a API
-                dadoscategoria.status = true
-                dadoscategoria.status_code = 200
-                dadoscategoria.items = resultcategoria.length
-                dadoscategoria.jogos = resultcategoria
+                dadosplataformas.status = true
+                dadosplataformas.status_code = 200
+                dadosplataformas.items = resultplataformas.length
+                dadosplataformas.jogo = resultplataformas
 
-                return dadoscategoria
+                return dadosplataformas
             }else{
                 return message.ERROR_NOT_FOUND //404
             }
@@ -144,23 +144,23 @@ const listarJogoCategoria = async function(){
 }
 
 //Função para tratar o retorno de um genero filtrando pelo ID do DAO
-const buscarJogoCategoria = async function(id){
+const buscarJogoPlataformas = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
             return message.ERROR_REQUIRED_FIELDS //400
         }else{
-            dadoscategoria = {}
+            dadosplataformas = {}
 
-            let resultcategoria = await jogoCategoriaDAO.selectByIdJogoCategoria(parseInt(id))
+            let resultplataformas = await jogoPlataformasDAO.selectByIdJogoPlataformas(parseInt(id))
             
-            if(resultcategoria != false || typeof(resultcategoria) == 'object'){
-                if(resultcategoria.length > 0){
+            if(resultplataformas != false || typeof(resultplataformas) == 'object'){
+                if(resultplataformas.length > 0){
                      //Criando um JSON de retorno de dados para a API
-                     dadoscategoria.status = true
-                     dadoscategoria.status_code = 200
-                     dadoscategoria.categoria = resultcategoria
+                     dadosplataformas.status = true
+                     dadosplataformas.status_code = 200
+                     dadosplataformas.plataforma = resultplataformas
 
-                    return dadoscategoria //200
+                    return dadosplataformas //200
                 }else{
                     return message.ERROR_NOT_FOUND //404
                 }
@@ -174,23 +174,23 @@ const buscarJogoCategoria = async function(id){
     }
 }
 
-const buscarCategoriaPorJogo = async function(id){
+const buscarPlataformasPorJogo = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
             return message.ERROR_REQUIRED_FIELDS //400
         }else{
-            dadoscategoria = {}
+            dadosplataformas = {}
 
-            let resultgenero = await filmeGeneroDAO.selectGeneroByIdFilme(parseInt(idFilme))
+            let resultplataformas = await jogoPlataformasDAO.selectPlataformasByIdJogo(parseInt(id))
             
-            if(resultgenero != false || typeof(resultgenero) == 'object'){
-                if(resultgenero.length > 0){
+            if(resultplataformas != false || typeof(resultplataformas) == 'object'){
+                if(resultplataformas.length > 0){
                      //Criando um JSON de retorno de dados para a API
-                    dadosgenero.status = true
-                    dadosgenero.status_code = 200
-                    dadosgenero.genero = resultgenero
+                    dadosplataformas.status = true
+                    dadosplataformas.status_code = 200
+                    dadosplataformas.plataforma = resultplataformas
 
-                    return dadosgenero //200
+                    return dadosplataformas //200
                 }else{
                     return message.ERROR_NOT_FOUND //404
                 }
@@ -211,10 +211,10 @@ const buscarCategoriaPorJogo = async function(id){
 
 
 module.exports = {
-    inserirJogoCategoria,
-    atualizarJogoCategoria,
-    excluirJogoCategoria,
-    listarJogoCategoria,
-    buscarJogoCategoria,
-    buscarCategoriaPorJogo
+    inserirJogoPlataformas,
+    atualizarJogoPlataformas,
+    excluirJogoPlataformas,
+    listarJogoPlataformas,
+    buscarJogoPlataformas,
+    buscarPlataformasPorJogo
 } 

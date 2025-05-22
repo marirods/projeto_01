@@ -10,6 +10,7 @@ const MESSAGE = require('../../modulo/config.js')
 //Import do DAO para realizar o CRUD no BD
 const jogoDAO = require('../../model/DAO/jogo.js')
 const controllerEmpresas = require('../empresas/controllerEmpresas.js')
+const controllerClassificacaoEtaria = require('../classificacao_etaria/controllerClassificacaoEtaria.js')
 const { insertEmpresas } = require('../../model/DAO/empresas.js')
 
  //Função para inserir um novo jogo
@@ -159,6 +160,13 @@ const listarJogo = async function(){
             itemJogo.empresas = dadosEmpresas.empresas
             
             delete itemJogo.id_empresas
+
+            let dadosFaixaEtaria = await controllerClassificacaoEtaria.buscarClassificacao_Etaria(itemJogo.id_faixa_etaria)
+            // console.log(dadosFaixaEtaria);
+            
+            itemJogo.FaixaEtaria = dadosFaixaEtaria.faixa_etaria
+            
+            delete itemJogo.id_faixa_etaria
 
 
            arrayJogos.push(itemJogo)

@@ -9,24 +9,24 @@
 const message = require('../../modulo/config.js')
 
 //Import do aquivo para realizar o CRUD de dados no Banco de Dados
-const jogoCategoriaDAO = require('../../model/DAO/jogo_categoria.js')
+const jogoIdiomasDAO = require('../../model/DAO/jogo_idiomas.js')
 
 //Função para tratar a inserção de um novo genero no DAO
-const inserirJogoCategoria = async function(jogoCategoria, contentType){
+const inserirJogoIdioma = async function(jogoIdiomas, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
         {
                 if (
-                    jogoCategoria.id_jogo              == ''              || jogoCategoria.id_jogo     == undefined        || jogoCategoria.id_jogo  == null || isNaN(jogoCategoria.id_jogo)  || jogoCategoria.id_jogo <=0 ||
-                    jogoCategoria.id_categoria            == ''           || jogoCategoria.id_categoria    == undefined    || jogoCategoria.id_categoria == null || isNaN(jogoCategoria.id_categoria) || jogoCategoria.id_categoria<=0
+                    jogoIdiomas.id_jogo                 == ''                || jogoIdiomas.id_jogo         == undefined          || jogoIdiomas.id_jogo  == null       || isNaN(jogoIdiomas.id_jogo)        || jogoIdiomas.id_jogo          <=0 ||
+                    jogoIdiomas.id_idioma               == ''                || jogoIdiomas.id_idioma       == undefined          || jogoIdiomas.id_idioma == null      || isNaN(jogoIdiomas.id_idioma)      || jogoIdiomas.id_idioma   <=0
                 )
                 {
                     return message.ERROR_REQUIRED_FIELDS //400
                 }else{
                     //Chama a função para inserir no BD e aguarda o retorno da função
-                    let resultcategoria = await jogoCategoriaDAO.insertJogoCategoria(jogoCategoria)
+                    let resultidiomas = await jogoIdiomasDAO.insertJogoIdioma(jogoIdiomas)
 
-                    if(resultcategoria)
+                    if(resultidiomas)
                         return message.SUCCESS_CREATED_ITEM //201
                     else
                         return message.ERROR_INTERNAL_SERVER_MODEL //500
@@ -40,27 +40,27 @@ const inserirJogoCategoria = async function(jogoCategoria, contentType){
 }
 
 //Função para tratar a atualização de um genero no DAO
-const atualizarJogoCategoria = async function(id, jogoCategoria, contentType){
+const atualizarJogoIdioma = async function(id, jogoIdiomas, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
             {
                 if (id                                == ''           || id                           == undefined    || id                            == null || isNaN(id)                          || id                          <= 0   ||
-                jogoCategoria.id_jogo                 == ''           || jogoCategoria.id_jogo        == undefined    || jogoCategoria.id_jogo         == null || isNaN(jogoCategoria.id_jogo)       || jogoCategoria.id_jogo       <=0 ||
-                jogoCategoria.id_categoria            == ''           || jogoCategoria.id_categoria   == undefined    || jogoCategoria.id_categoria    == null || isNaN(jogoCategoria.id_categoria)  || jogoCategoria.id_categoria  <=0
+                jogoIdiomas.id_jogo                   == ''           || jogoIdiomas.id_jogo          == undefined    || jogoIdiomas.id_jogo         == null || isNaN(jogoIdiomas.id_jogo)       || jogoIdiomas.id_jogo       <=0 ||
+                jogoIdiomas.id_idioma                 == ''           || jogoIdiomas.id_idioma        == undefined    || jogoIdiomas.id_idioma    == null || isNaN(jogoIdiomas.id_idioma)  || jogoIdiomas.id_idioma  <=0
                 )
                 {
                     return message.ERROR_REQUIRED_FIELDS //400
                 }else{
                     //Validação para verificar se o ID existe no BD
-                    let resultcategoria = await jogoCategoriaDAO.selectByIdJogoCategoria(parseInt(id))
+                    let resultidiomas = await jogoIdiomasDAO.selectByIdJogoIdioma(parseInt(id))
 
-                    if(resultcategoria != false || typeof(resultcategoria) == 'object'){
-                        if(resultcategoria.length > 0 ){
+                    if(resultidiomas != false || typeof(resultidiomas) == 'object'){
+                        if(resultidiomas.length > 0 ){
                             //Update
                             //Adiciona o ID do genero no JSON com os dados
-                            categoria.id = parseInt(id)
+                            idiomas.id = parseInt(id)
 
-                            let result = await jogoCategoriaDAO.updateJogoCategoria(jogoCategoria)
+                            let result = await jogoIdiomasDAO.updateJogoIdioma(jogoIdiomas)
 
                             if(result){
                                 return message.SUCCESS_UPDATED_ITEM //200
@@ -83,20 +83,20 @@ const atualizarJogoCategoria = async function(id, jogoCategoria, contentType){
 }
 
 //Função para tratar a exclusão de um genero no DAO
-const excluirJogoCategoria = async function(id){
+const excluirJogoIdioma = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
             return message.ERROR_REQUIRED_FIELDS //400
         }else{
 
             //Funcção que verifica se  ID existe no BD
-            let resultcategoria = await jogoCategoriaDAO.selectByIdJogoCategoria(parseInt(id))
+            let resultidiomas = await jogoIdiomasDAO.selectByIdJogoIdioma(parseInt(id))
 
-            if(resultcategoria != false || typeof(resultcategoria) == 'object'){
+            if(resultidiomas != false || typeof(resultidiomas) == 'object'){
                 //Se existir, faremos o delete
-                if(resultcategoria.length > 0){
+                if(resultidiomas.length > 0){
                     //delete
-                    let result = await jogoCategoriaDAO.deleteJogoCategoria(parseInt(id))
+                    let result = await jogoIdiomasDAO.deleteJogoIdioma(parseInt(id))
 
                     if(result){
                         return message.SUCCESS_DELETED_ITEM //200
@@ -116,22 +116,22 @@ const excluirJogoCategoria = async function(id){
 }
 
 //Função para tratar o retorno de uma lista de generos do DAO
-const listarJogoCategoria = async function(){
+const listarJogoidioma = async function(){
     try {
         //Objeto do tipo JSON
-        let dadoscategoria = {}
+        let dadosIdiomas = {}
         //Chama a função para retornar os generos cadastrados
-        let resultcategoria = await jogoCategoriaDAO.selectAllJogoCategoria()
+        let resultidiomas = await jogoIdiomasDAO.selectAllJogoIdioma()
 
-        if(resultcategoria != false || typeof(resultcategoria) == 'object'){
-            if(resultcategoria.length > 0){
+        if(resultidiomas != false || typeof(resultidiomas) == 'object'){
+            if(resultidiomas.length > 0){
                 //Criando um JSON de retorno de dados para a API
-                dadoscategoria.status = true
-                dadoscategoria.status_code = 200
-                dadoscategoria.items = resultcategoria.length
-                dadoscategoria.jogos = resultcategoria
+                dadosIdiomas.status = true
+                dadosIdiomas.status_code = 200
+                dadosIdiomas.items = resultidiomas.length
+                dadosIdiomas.idioma = resultidiomas
 
-                return dadoscategoria
+                return dadosIdiomas
             }else{
                 return message.ERROR_NOT_FOUND //404
             }
@@ -144,23 +144,23 @@ const listarJogoCategoria = async function(){
 }
 
 //Função para tratar o retorno de um genero filtrando pelo ID do DAO
-const buscarJogoCategoria = async function(id){
+const buscarJogoIdioma = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
             return message.ERROR_REQUIRED_FIELDS //400
         }else{
-            dadoscategoria = {}
+            dadosIdiomas = {}
 
-            let resultcategoria = await jogoCategoriaDAO.selectByIdJogoCategoria(parseInt(id))
+            let resultidiomas = await jogoIdiomasDAO.selectByIdJogoIdioma(parseInt(id))
             
-            if(resultcategoria != false || typeof(resultcategoria) == 'object'){
-                if(resultcategoria.length > 0){
+            if(resultidiomas != false || typeof(resultidiomas) == 'object'){
+                if(resultidiomas.length > 0){
                      //Criando um JSON de retorno de dados para a API
-                     dadoscategoria.status = true
-                     dadoscategoria.status_code = 200
-                     dadoscategoria.categoria = resultcategoria
+                     dadosIdiomas.status = true
+                     dadosIdiomas.status_code = 200
+                     dadosIdiomas.idioma = resultplataformas
 
-                    return dadoscategoria //200
+                    return dadosIdiomas //200
                 }else{
                     return message.ERROR_NOT_FOUND //404
                 }
@@ -174,23 +174,43 @@ const buscarJogoCategoria = async function(id){
     }
 }
 
-const buscarCategoriaPorJogo = async function(id){
+const buscarIdiomaPorJogo = async function(id){
     try {
+        const arrayIdiomas = []
         if(id == '' || id == undefined || id == null || isNaN(id) || id <=0){
             return message.ERROR_REQUIRED_FIELDS //400
         }else{
-            dadoscategoria = {}
+            dadosIdiomas = {}
 
-            let resultgenero = await filmeGeneroDAO.selectGeneroByIdFilme(parseInt(idFilme))
+            let resultidiomas = await jogoIdiomasDAO.selectJogoByIdIdioma(parseInt(id))
             
-            if(resultgenero != false || typeof(resultgenero) == 'object'){
-                if(resultgenero.length > 0){
+            if(resultidiomas != false || typeof(resultidiomas) == 'object'){
+                if(resultidiomas.length > 0){
                      //Criando um JSON de retorno de dados para a API
-                    dadosgenero.status = true
-                    dadosgenero.status_code = 200
-                    dadosgenero.genero = resultgenero
+                    dadosIdiomas.status = true
+                    dadosIdiomas.status_code = 200                    
+                    for(item of resultidiomas){
+            
+                        let dadosEmpresas = await controllerEmpresas.buscarEmpresas(item.id_empresas)
+                        item.empresas = dadosEmpresas.empresas
+                        
+                        delete item.id_empresas
+            
+                        let dadosFaixaEtaria = await controllerClassificacaoEtaria.buscarClassificacao_Etaria(item.id_faixa_etaria)
+                        // console.log(dadosFaixaEtaria);
+                        
+                        item.FaixaEtaria = dadosFaixaEtaria.faixa_etaria
+                        
+                        delete item.id_faixa_etaria
+            
+            
+                        arrayIdiomas.push(item)
+                    }
+                    
+                    dadosIdiomas.games = arrayIdiomas
+                    dadosIdiomas.idioma = resultidiomas
 
-                    return dadosgenero //200
+                    return dadosIdiomas //200
                 }else{
                     return message.ERROR_NOT_FOUND //404
                 }
@@ -211,10 +231,10 @@ const buscarCategoriaPorJogo = async function(id){
 
 
 module.exports = {
-    inserirJogoCategoria,
-    atualizarJogoCategoria,
-    excluirJogoCategoria,
-    listarJogoCategoria,
-    buscarJogoCategoria,
-    buscarCategoriaPorJogo
+    inserirJogoIdioma,
+    atualizarJogoIdioma,
+    excluirJogoIdioma,
+    listarJogoidioma,
+    buscarJogoIdioma,
+    buscarIdiomaPorJogo
 } 

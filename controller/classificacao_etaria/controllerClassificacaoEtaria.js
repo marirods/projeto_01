@@ -184,15 +184,7 @@ const buscarClassificacao_Etaria = async function(idClassificacao) {
             if(resultClassificacao.length > 0){
                 dadosClassificacao.status = true;
                 dadosClassificacao.status_code = 200;
-
-                for(let itemJogo of resultClassificacao){
-                    let dadosJogos = await controllerJogo.buscarJogo(itemJogo.id)
-                    itemJogo.jogo = dadosJogos.jogo
-                    delete itemJogo.id
-
-                    arrayClassificacao.push(itemJogo)
-                }
-                dadosClassificacao.games = arrayClassificacao
+                dadosClassificacao.faixa_etaria = resultClassificacao
                 return dadosClassificacao
             }else{
                 return MESSAGE.ERROR_NOT_FOUND
@@ -201,6 +193,8 @@ const buscarClassificacao_Etaria = async function(idClassificacao) {
             return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
         }
     } catch (error) {
+        console.log(error);
+        
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
